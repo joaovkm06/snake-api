@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import scoreRoutes from "./routes/ScoreRoutes.js";
-import connectDB from "./config/DbConnect.js";
+import scoreRoutes from "./src/routes/ScoreRoutes.js";
+import connectDB from "./src/config/DbConnect.js";
 
 const app = express();
 
