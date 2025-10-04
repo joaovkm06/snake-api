@@ -9,7 +9,7 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://seu-dominio-vercel.app"], 
+  origin: ["http://localhost:3000", "https://snake-api-git-main-joao-kmnieicks-projects.vercel.app/"], 
 }));
 app.use(express.json());
 
