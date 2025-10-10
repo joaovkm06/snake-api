@@ -1,25 +1,34 @@
 import serverless from "serverless-http";
 import express from "express";
-import connectDB from "../src/db.js";
-import scoreRoutes from "../src/routes/scoreRoutes.js";
+import scoreRoutes from "./src/routes/scoreRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 
 const app = express();
 app.use(express.json());
+
+// Rotas da API
 app.use("/", scoreRoutes);
 
-// Swagger
-const swaggerPath = path.join(process.cwd(), "swagger.yaml");
-const swaggerDocument = YAML.load(swaggerPath);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Tentativa de carregar o Swagger (sensível a maiúsculas/minúsculas)
+let swaggerDocument;
+const possibleFiles = ["swagger.yaml", "Swagger.yaml"];
 
-app.get("/", (req, res) => res.json({ message: "API funcionando!" }));
+for (const file of possibleFiles) {
+  try {
+    swaggerDocument = YAML.load(path.join(process.cwd(), file));
+    console.log(`Swagger carregado com sucesso de: ${file}`);
+    break;
+  } catch (err) {
+    console.warn(`Não foi possível carregar ${file}: ${err.message}`);
+  }
+}
 
-// Conecta no MongoDB **uma vez só**
-connectDB().then(() => console.log("MongoDB conectado"))
-          .catch(err => console.error("Erro MongoDB:", err));
+if (swaggerDocument) {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} else {
+  console.warn("Swagger não carregado. Nenhuma documentação disponível.");
+}
 
-// Exporta direto o Express pro serverless
-export default serverless(app);
+export const handler = serverless(app);
