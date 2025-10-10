@@ -13,7 +13,7 @@ app.use("/", scoreRoutes);
 
 // Tentativa de carregar o Swagger (sensível a maiúsculas/minúsculas)
 let swaggerDocument;
-const possibleFiles = ["swagger.yaml", "Swagger.yaml"];
+const possibleFiles = ["swagger.yaml", "Swagger.yaml","jogador-swagger.yaml"];
 
 for (const file of possibleFiles) {
   try {
