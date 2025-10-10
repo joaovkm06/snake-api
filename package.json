@@ -16,10 +16,12 @@
     "express": "^5.1.0",
     "mongoose": "^8.18.2",
     "next": "^15.5.4",
-    "serverless": "^4.20.2",
+    "path": "^0.12.7",
+    "serverless": "^4.21.0",
     "serverless-http": "^4.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.8.1",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
