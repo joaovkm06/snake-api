@@ -11,13 +11,14 @@ app.use(express.json());
 // Rotas da API
 app.use("/", scoreRoutes);
 
-// Tentativa de carregar o Swagger (sensível a maiúsculas/minúsculas)
+// Carregar Swagger (verifica vários nomes possíveis)
 let swaggerDocument;
-const possibleFiles = ["swagger.yaml", "Swagger.yaml","jogador-swagger.yaml"];
+const possibleFiles = ["swagger.yaml", "Swagger.yaml", "jogador-swagger.yaml"];
 
 for (const file of possibleFiles) {
   try {
-    swaggerDocument = YAML.load(path.join(process.cwd(), file));
+    const filePath = path.join(process.cwd(), file);
+    swaggerDocument = YAML.load(filePath);
     console.log(`Swagger carregado com sucesso de: ${file}`);
     break;
   } catch (err) {
@@ -31,4 +32,5 @@ if (swaggerDocument) {
   console.warn("Swagger não carregado. Nenhuma documentação disponível.");
 }
 
-export const handler = serverless(app);
+// 🚀 Export padrão exigido pela Vercel
+export default serverless(app);
