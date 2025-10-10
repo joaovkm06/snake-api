@@ -1,4 +1,3 @@
-
 import serverless from "serverless-http";
 import express from "express";
 import connectDB from "../src/db.js";
@@ -18,15 +17,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => res.json({ message: "API funcionando!" }));
 
-// Handler serverless
-const handler = async (req, res) => {
-  try {
-    await connectDB();  // garante conexão única
-    return app(req, res);
-  } catch (err) {
-    console.error("Erro serverless:", err);
-    res.status(500).json({ message: "Erro no servidor" });
-  }
-};
+// Conecta no MongoDB **uma vez só**
+connectDB().then(() => console.log("MongoDB conectado"))
+          .catch(err => console.error("Erro MongoDB:", err));
 
-export default serverless(handler);
+// Exporta direto o Express pro serverless
+export default serverless(app);
