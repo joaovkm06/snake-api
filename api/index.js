@@ -1,23 +1,16 @@
 import serverless from "serverless-http";
-import app from "../src/app.js"; // importa o app já configurado
+import app from "../src/app.js";
 import connectDB from "../src/db.js";
 
-// Cache global da conexão (Serverless não mantém estado entre invocações, mas isso ajuda)
-let cached = false;
-
+// Conecta no MongoDB antes de responder
 const handler = async (req, res) => {
-  if (!cached) {
-    try {
-      await connectDB();
-      cached = true;
-      console.log("MongoDB conectado via Serverless!");
-    } catch (err) {
-      console.error("Erro ao conectar ao MongoDB:", err);
-      return res.status(500).json({ error: "Erro ao conectar ao banco" });
-    }
+  try {
+    await connectDB();
+    return app(req, res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erro ao conectar no banco" });
   }
-
-  return app(req, res);
 };
 
-export const server = serverless(handler);
+export const defaultHandler = serverless(handler);

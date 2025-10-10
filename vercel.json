@@ -4,9 +4,6 @@
     { "src": "api/index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "api/index.js" }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri"
-  }
+    { "src": "/(.*)", "dest": "/api/index.js" }
+  ]
 }
