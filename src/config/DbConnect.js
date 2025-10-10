@@ -1,19 +1,17 @@
 import mongoose from "mongoose";
 
-let isConnected = false; // flag para não reconectar várias vezes
+let isConnected = false;
 
 const connectDB = async () => {
   if (isConnected) return;
+
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
     isConnected = true;
-    console.log("MongoDB conectado com sucesso!");
-  } catch (error) {
-    console.error("Erro ao conectar ao MongoDB:", error);
-    throw error;
+    console.log("MongoDB conectado!");
+  } catch (err) {
+    console.error("Erro no MongoDB:", err);
+    throw err; // importante lançar para o Vercel capturar
   }
 };
 
