@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: Jogador API
+  version: 1.0.0
+  description: API para gerenciamento de jogadores e ranking do Snake.
+paths:
+  /jogadores:
+    get:
+      summary: Lista todos os jogadores
+      responses:
+        '200':
+          description: Lista de jogadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jogador'
+    post:
+      summary: Cria um novo jogador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Jogador criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JogadorResponse'
+        '400':
+          description: Dados inválidos
+  /jogadores/{id}/score:
+    put:
+      summary: Atualiza o score do jogador
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                score:
+                  type: integer
+      responses:
+        '200':
+          description: Score atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  jogador:
+                    $ref: '#/components/schemas/Jogador'
+                  ranking:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Jogador'
+        '400':
+          description: Score inválido
+        '404':
+          description: Jogador não encontrado
+  /ranking:
+    get:
+      summary: Lista o ranking dos jogadores
+      responses:
+        '200':
+          description: Ranking dos jogadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jogador'
+components:
+  schemas:
+    Jogador:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+        score:
+          type: integer
+    JogadorResponse:
+      type: object
+      properties:
+        jogador:
+          $ref: '#/components/schemas/Jogador'

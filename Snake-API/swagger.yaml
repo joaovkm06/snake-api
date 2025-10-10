@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  title: Snake API
+  version: 1.0.0
+  description: API para gerenciamento de scores e jogadores do Snake.
+paths:
+  /scores:
+    get:
+      summary: Lista os scores
+      responses:
+        "200":
+          description: Lista de scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Score'
+    post:
+      summary: Cria um novo score
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                pontos:
+                  type: integer
+      responses:
+        "201":
+          description: Score criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+  /scores/{id}:
+    delete:
+      summary: Deleta um score
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Score deletado
+  /jogadores:
+    get:
+      summary: Lista todos os jogadores
+      responses:
+        '200':
+          description: Lista de jogadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jogador'
+    post:
+      summary: Cria um novo jogador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Jogador criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JogadorResponse'
+        '400':
+          description: Dados inválidos
+  /jogadores/{id}/score:
+    put:
+      summary: Atualiza o score do jogador
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                score:
+                  type: integer
+      responses:
+        '200':
+          description: Score atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  jogador:
+                    $ref: '#/components/schemas/Jogador'
+                  ranking:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Jogador'
+        '400':
+          description: Score inválido
+        '404':
+          description: Jogador não encontrado
+  /ranking:
+    get:
+      summary: Lista o ranking dos jogadores
+      responses:
+        '200':
+          description: Ranking dos jogadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jogador'
+components:
+  schemas:
+    Score:
+      type: object
+      properties:
+        _id:
+          type: string
+        nome:
+          type: string
+        pontos:
+          type: integer
+    Jogador:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+        score:
+          type: integer
+    JogadorResponse:
+      type: object
+      properties:
+        jogador:
+          $ref: '#/components/schemas/Jogador'
