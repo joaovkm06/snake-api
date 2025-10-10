@@ -6,28 +6,41 @@ import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 
-const app = express();
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
 app.use(express.json());
 app.use("/", scoreRoutes);
 
-// Swagger
-const swaggerPath = path.join(process.cwd(), "swagger.yaml");
-const swaggerDocument = YAML.load(swaggerPath);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Tenta carregar Swagger
+let swaggerDocument;
+try {
+  const swaggerPathOptions = [
+    path.join(__dirname, "../swagger.yaml"),
+    path.join(__dirname, "../Swagger.yaml"),
+    path.join(__dirname, "../jogador-swagger.yaml"),
+  ];
 
-app.get("/", (req, res) => res.json({ message: "API funcionando!" }));
-
-const handler = async (req, res) => {
-  try {
-    await connectDB();
-    return app(req, res);
-  } catch (err) {
-    console.error("Erro na função serverless:", err);
-    res.status(500).json({ message: "Erro no servidor" });
+  for (const p of swaggerPathOptions) {
+    try {
+      swaggerDocument = YAML.load(p);
+      console.log(`Swagger carregado de: ${p}`);
+      break;
+    } catch (err) {
+      console.log(`Não foi possível carregar ${p}: ${err.message}`);
+    }
   }
-};
+} catch (err) {
+  console.log("Swagger não carregado. Nenhuma documentação disponível.");
+}
 
-export const handlerExport = serverless(handler);
+if (swaggerDocument) {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
-export default app;
+connectDB();
+
+export const handler = serverless(app);
