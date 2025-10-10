@@ -19,9 +19,9 @@ app.use("/", scoreRoutes);
 let swaggerDocument;
 try {
   const swaggerPathOptions = [
-    path.join(__dirname, "../swagger.yaml"),
-    path.join(__dirname, "../Swagger.yaml"),
-    path.join(__dirname, "../jogador-swagger.yaml"),
+    path.join(__dirname, "swagger.yaml"),
+    path.join(__dirname, "Swagger.yaml"),
+    path.join(__dirname, "jogador-swagger.yaml"),
   ];
 
   for (const p of swaggerPathOptions) {
