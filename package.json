@@ -4,7 +4,8 @@
   "description": "",
   "main": " node src/app.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "buid":"tsc"
   },
   "type": "module",
   "keywords": [],
