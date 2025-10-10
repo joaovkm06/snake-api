@@ -32,5 +32,5 @@ if (swaggerDocument) {
   console.warn("Swagger não carregado. Nenhuma documentação disponível.");
 }
 
-// 🚀 Export padrão exigido pela Vercel
+
 export default serverless(app);

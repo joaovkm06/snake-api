@@ -5,7 +5,6 @@ import scoreRoutes from "./routes/scoreRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
-
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,9 +12,11 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
+
+// Rotas da API
 app.use("/", scoreRoutes);
 
-// Tenta carregar Swagger
+// Carrega Swagger apenas uma vez
 let swaggerDocument;
 try {
   const swaggerPathOptions = [
@@ -41,6 +42,9 @@ if (swaggerDocument) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
-connectDB();
-
-export const handler = serverless(app);
+// Exporta o handler serverless
+export const handler = serverless(async (req, res) => {
+  // Conecta no MongoDB **uma vez por execução**
+  await connectDB();
+  return app(req, res);
+});
